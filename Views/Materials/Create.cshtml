@@ -1,0 +1,36 @@
+﻿@model ProductionManagementSystem.Models.Material
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create Material</h1>
+
+<div class="container">
+    <form asp-action="Create" asp-controller="Materials" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label class="control-label" asp-for="Name"></label>
+            <input asp-for="Name" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label class="control-label" asp-for="Quantity"></label>
+            <input asp-for="Quantity" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label class="control-label" asp-for="UnitOfMeasure"></label>
+            <input asp-for="UnitOfMeasure" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label class="control-label" asp-for="MinimalStock"></label>
+            <input asp-for="MinimalStock" class="form-control" />
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Create" class="btn btn-primary" />
+        </div>
+    </form>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
