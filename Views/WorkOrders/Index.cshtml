@@ -1,10 +1,10 @@
-﻿@model IEnumerable<ProductionManagementSystem.Models.Material>
+﻿@model IEnumerable<ProductionManagementSystem.Models.WorkOrder>
 
 @{
-    ViewData["Title"] = "Materials";
+    ViewData["Title"] = "Work Orders";
 }
 
-<h1>Materials</h1>
+<h1>Work Orders</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -13,16 +13,19 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                @Html.DisplayNameFor(model => model.ProductId)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Quantity)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.UnitOfMeasure)
+                @Html.DisplayNameFor(model => model.StartDate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.MinimalStock)
+                @Html.DisplayNameFor(model => model.EstimatedEndDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
             </th>
             <th></th>
         </tr>
@@ -32,16 +35,19 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Name)
+                    @Html.DisplayFor(modelItem => item.ProductId)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Quantity)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.UnitOfMeasure)
+                    @Html.DisplayFor(modelItem => item.StartDate)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.MinimalStock)
+                    @Html.DisplayFor(modelItem => item.EstimatedEndDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

@@ -9,7 +9,13 @@
 <form asp-action="Index" method="get">
     <div class="form-group">
         <label for="category">Category:</label>
-        <select id="category" asp-for="@Model.SelectedCategory" asp-items="@(new SelectList(Model.Categories))" class="form-control"></select>
+        <select class="form-control" id="category" name="category">
+            <option value="">All</option>
+            @foreach (var category in Model.Categories)
+            {
+                <option value="@category" selected="@(Model.SelectedCategory == category)">@category</option>
+            }
+</select>
     </div>
 
     <div class="form-group">

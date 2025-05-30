@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using ProductionManagementSystem.Data;
 using ProductionManagementSystem.Models;
-using System.Threading.Tasks;
 
 namespace ProductionManagementSystem.Controllers
 {
@@ -18,13 +17,31 @@ namespace ProductionManagementSystem.Controllers
         // GET: Materials
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Materials.ToListAsync());
+            return View(await _context.Materials.ToListAsync()); // Возвращает представление Index с данными из БД
+        }
+
+        // GET: Materials/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var material = await _context.Materials
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (material == null)
+            {
+                return NotFound();
+            }
+
+            return View(material); // Возвращает представление Details с конкретным материалом
         }
 
         // GET: Materials/Create
         public IActionResult Create()
         {
-            return View();
+            return View(); // Возвращает представление Create (пустая форма)
         }
 
         // POST: Materials/Create
@@ -36,15 +53,15 @@ namespace ProductionManagementSystem.Controllers
             {
                 _context.Add(material);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index)); // Перенаправляет на Index после успешного создания
             }
-            return View(material);
+            return View(material); // Возвращает форму Create с ошибками валидации (если они есть)
         }
 
         // GET: Materials/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Materials == null)
+            if (id == null)
             {
                 return NotFound();
             }
@@ -54,7 +71,7 @@ namespace ProductionManagementSystem.Controllers
             {
                 return NotFound();
             }
-            return View(material);
+            return View(material); // Возвращает представление Edit с данными материала
         }
 
         // POST: Materials/Edit/5
@@ -85,9 +102,42 @@ namespace ProductionManagementSystem.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index)); // Перенаправляет на Index после успешного редактирования
             }
-            return View(material);
+            return View(material); // Возвращает форму Edit с ошибками валидации (если они есть)
+        }
+
+        // GET: Materials/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var material = await _context.Materials
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (material == null)
+            {
+                return NotFound();
+            }
+
+            return View(material); // Возвращает представление Delete с данными материала
+        }
+
+        // POST: Materials/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var material = await _context.Materials.FindAsync(id);
+            if (material != null)
+            {
+                _context.Materials.Remove(material);
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index)); // Перенаправляет на Index после успешного удаления
         }
 
         private bool MaterialExists(int id)

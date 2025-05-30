@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using ProductionManagementSystem.Data;
 using ProductionManagementSystem.Models;
 using ProductionManagementSystem.ViewModels;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ProductionManagementSystem.Controllers
@@ -16,7 +17,7 @@ namespace ProductionManagementSystem.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index(string category, string searchTerm)
+        public async Task<IActionResult> Index(string? category, string? searchTerm)
         {
             var products = _context.Products.AsQueryable();
 
@@ -33,7 +34,9 @@ namespace ProductionManagementSystem.Controllers
             var viewModel = new ProductListViewModel
             {
                 Products = await products.ToListAsync(),
-                Categories = _context.Products.Select(p => p.Category).Distinct().ToList()
+                Categories = await _context.Products.Select(p => p.Category).Distinct().ToListAsync(),
+                SelectedCategory = category, // Pass the selected category to the view
+                SearchTerm = searchTerm   // Pass the search term to the view
             };
 
             return View(viewModel);

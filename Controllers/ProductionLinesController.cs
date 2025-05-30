@@ -2,15 +2,10 @@
 using Microsoft.EntityFrameworkCore;
 using ProductionManagementSystem.Data;
 using ProductionManagementSystem.Models;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ProductionManagementSystem.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class ProductionLinesController : ControllerBase
+    public class ProductionLinesController : Controller
     {
         private readonly ApplicationDbContext _context;
 
@@ -19,52 +14,130 @@ namespace ProductionManagementSystem.Controllers
             _context = context;
         }
 
-        // GET: api/lines?available=true
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProductionLine>>> GetProductionLines(bool available = false)
+        // GET: ProductionLines
+        public async Task<IActionResult> Index()
         {
-            IQueryable<ProductionLine> query = _context.ProductionLines;
-
-            if (available)
-            {
-                query = query.Where(l => l.CurrentWorkOrderId == null);
-            }
-
-            return await query.ToListAsync();
+            return View(await _context.ProductionLines.ToListAsync());
         }
 
-        // PUT: api/lines/{id}/status
-        [HttpPut("{id}/status")]
-        public async Task<IActionResult> PutLineStatus(int id, string status)
+        // GET: ProductionLines/Details/5
+        public async Task<IActionResult> Details(int? id)
         {
-            var line = await _context.ProductionLines.FindAsync(id);
-
-            if (line == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            line.Status = status;
-
-            _context.Entry(line).State = EntityState.Modified;
-
-            try
+            var productionLine = await _context.ProductionLines
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (productionLine == null)
             {
+                return NotFound();
+            }
+
+            return View(productionLine);
+        }
+
+        // GET: ProductionLines/Create
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: ProductionLines/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("Id,Name,Status,EfficiencyFactor")] ProductionLine productionLine)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(productionLine);
                 await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
-            catch (DbUpdateConcurrencyException)
+            return View(productionLine);
+        }
+
+        // GET: ProductionLines/Edit/5
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
             {
-                if (!ProductionLineExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NotFound();
             }
 
-            return NoContent();
+            var productionLine = await _context.ProductionLines.FindAsync(id);
+            if (productionLine == null)
+            {
+                return NotFound();
+            }
+            return View(productionLine);
+        }
+
+        // POST: ProductionLines/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Status,EfficiencyFactor")] ProductionLine productionLine)
+        {
+            if (id != productionLine.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(productionLine);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!ProductionLineExists(productionLine.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(productionLine);
+        }
+
+        // GET: ProductionLines/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var productionLine = await _context.ProductionLines
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (productionLine == null)
+            {
+                return NotFound();
+            }
+
+            return View(productionLine);
+        }
+
+        // POST: ProductionLines/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var productionLine = await _context.ProductionLines.FindAsync(id);
+            if (productionLine != null)
+            {
+                _context.ProductionLines.Remove(productionLine);
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         private bool ProductionLineExists(int id)

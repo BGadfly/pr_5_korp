@@ -54,18 +54,15 @@ namespace ProductionManagementSystem.Data
 
 
             modelBuilder.Entity<WorkOrder>()
-                .HasOne(w => w.ProductionLine)
-                .WithMany(p => p.WorkOrders)
-                .HasForeignKey(w => w.ProductionLineId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .HasOne(w => w.Product)
+                .WithMany()
+                .HasForeignKey(w => w.ProductId);
 
-            // Configure relationships and constraints as needed
-            // Example: Configure the relationship between WorkOrder and ProductionLine
             modelBuilder.Entity<WorkOrder>()
                 .HasOne(w => w.ProductionLine)
                 .WithMany(p => p.WorkOrders)
                 .HasForeignKey(w => w.ProductionLineId)
-                .OnDelete(DeleteBehavior.SetNull); // Prevent cascading delete
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

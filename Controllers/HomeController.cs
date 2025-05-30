@@ -15,7 +15,8 @@ namespace ProductionManagementSystem.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            List<Product> products = new List<Product>(); // Create an empty list
+            return View(products); // Pass the list to the view
         }
 
         public IActionResult Privacy()
